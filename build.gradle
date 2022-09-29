@@ -14,6 +14,32 @@ dependencies {
     implementation 'org.springframework:spring-webmvc:5.3.9'
 }
 
+//Fat JAR
+//jar {
+//    manifest {
+//        attributes 'Main-Class': 'ru.atom.gradle.HelloWorld'
+//    }
+//    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+//    from(configurations.runtimeClasspath.files.collect {
+//        zipTree(it)
+//    })
+//}
+
+// JAR 2 way
+task copyAllDependencies(type: Copy) {
+    from(configurations.runtimeClasspath.files)
+    into("$buildDir/libs/lib")
+}
+
+jar {
+    dependsOn(copyAllDependencies)
+    def jars = configurations.runtimeClasspath.files.collect{"lib/$it.name"}
+    manifest {
+        attributes 'Main-Class': 'ru.atom.gradle.HelloWorld',
+                    'Class-Path': jars.join(' ')
+    }
+}
+
 class CustomPlugin implements Plugin<Project> {
     @Override
     void apply (Project project) {

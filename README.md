@@ -90,3 +90,38 @@ spring-webmvc подключается spring-core и т.п.</p>
 перечислить там зависимости для удаления. Либо можно указать <code>transitive = false</code></p>
 <p><code>platform()</code> резолвит конфликты зависимостей. По факту BOM -  это просто xml-файл со всеми зависимостями и
 версиями, которые совместимы друг с другом.</p>
+
+## JAR
+### Fat JAR
+<p>Для того, чтобы запустить jar-файл со всеми зависимости, есть вариант получить все зависимости и разархивировать их.
+</p>
+<pre>
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.atom.gradle.HelloWorld'
+    }
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    from(configurations.runtimeClasspath.files.collect {
+        zipTree(it)
+    })
+}
+</pre>
+
+### JAR 2
+<p>Пишем таску, которая копирует все зависимости в папку lib. Затем делаем таску jar, зависимой от нашей таски
+копирования зависимостей, и добавляем аттрибут Class-Path.</p>
+<pre>
+task copyAllDependencies(type: Copy) {
+    from(configurations.runtimeClasspath.files)
+    into("$buildDir/libs/lib")
+}
+
+jar {
+    dependsOn(copyAllDependencies)
+    def jars = configurations.runtimeClasspath.files.collect{"lib/$it.name"}
+    manifest {
+        attributes 'Main-Class': 'ru.atom.gradle.HelloWorld',
+                    'Class-Path': jars.join(' ')
+    }
+}
+</pre>
