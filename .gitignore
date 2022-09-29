@@ -33,3 +33,5 @@ web/build/
 common/build/
 common/core/build/
 common/util/build/
+buildSrc/.gradle
+buildSrc/build

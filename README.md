@@ -70,8 +70,8 @@ sourceSets {
 implementation</code>.</p>
 <p><code>testImplementation extends implementation</code> - используется для подключения зависимостей в нашем исходном 
 коде, которые лежат в папке test.</p>
-<p><code>testCompileOnly</code> - используется только во время комплияций тестов. Во время выполнения она(зависимость) нам не 
-нужна.</p>
+<p><code>testCompileOnly</code> - используется только во время комплияций тестов. Во время выполнения она(зависимость) 
+нам не нужна.</p>
 <p><code>testCompileClassPath extends testCompileOnly, testImplementation</code> - включает в себя 
 <code>testCompileOnly, testImplementation</code>.</p>
 <p><code>testRuntimeOnly extends runtimeOnly</code> - аналог <code>testCompileOnly</code>, но она доступна только во
@@ -87,7 +87,7 @@ implementation</code>.</p>
 <p><i>Транзитивные зависимости</i> - зависимости, которые были подключены неявно. Например, при подключении 
 spring-webmvc подключается spring-core и т.п.</p>
 <p>Для исключения транзитивных зависимостей у <code>implementation</code> можно вызвать <code>exclude{}</code> и 
-перечислить там зависимости для удаления. Либо можно указать <code>transitive = false</code></p>
+перечислить там зависимости для удаления. Либо можно указать <code>transitive = false</code>.</p>
 <p><code>platform()</code> резолвит конфликты зависимостей. По факту BOM -  это просто xml-файл со всеми зависимостями и
 версиями, которые совместимы друг с другом.</p>
 
@@ -131,4 +131,16 @@ jar {
 проекты, которые включают в себя эту библиотеку, будут и включать эту зависимость. <a href="database/build.gradle">
 Пример</a>.</p>
 <p>С помощью директивы <code>allprojects{}</code> можно настроть общую конфигурацию для всех проектов. А с помощью
-<code>subprojects{} для подпроектов.</code></p>
+<code>subprojects{}</code> для подпроектов.</p>
+
+## Advanced
+### Testing
+<p>Jacoco наподобие sonarqube анализирует покрытие кода тестами. Также можно устанавливать quality gates на покрытие 
+тестами, исключать какие-то классы из анализа и т.п.</p>
+<p>Тесты можно выполнять параллельно. Достаточно указать <code>maxParallelForks = n</code>.</p>
+
+### Cache
+<p>Каждая таска на вход принимает входные данные <code>inputs</code> и отдает выходные данные <code>outputs</code>. На 
+это и строится cache.</p>
+
+### Gradle Wrapper

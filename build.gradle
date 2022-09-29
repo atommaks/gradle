@@ -1,5 +1,8 @@
+import ru.atom.task.ReleaseTask
+
 plugins {
     id 'java'
+    id 'custom-atom-plugin'
 }
 
 allprojects {
@@ -9,7 +12,6 @@ allprojects {
 }
 
 apply from: 'script.gradle'
-apply plugin: CustomPlugin.class
 
 repositories {
     mavenCentral()
@@ -37,31 +39,20 @@ task copyAllDependencies(type: Copy) {
     into("$buildDir/libs/lib")
 }
 
+ext {
+    release = true
+}
+
+task makeRelease(type: ReleaseTask) {
+    release = project.release
+    releaseFile = new File("$buildDir/script.gradle")
+}
+
 jar {
     dependsOn(copyAllDependencies)
     def jars = configurations.runtimeClasspath.files.collect{"lib/$it.name"}
     manifest {
         attributes 'Main-Class': 'ru.atom.gradle.HelloWorld',
                     'Class-Path': jars.join(' ')
-    }
-}
-
-class CustomPlugin implements Plugin<Project> {
-    @Override
-    void apply (Project project) {
-        def map = ["description": "Hello task", "group": "atom"]
-        project.task(map, "hello") {
-            println "Hello task!"
-
-            doLast {
-                println "Execution phase, Action1"
-            }
-
-            doFirst {
-                println "Execution phase, Action2"
-            }
-
-            println "description: ${description}, group: ${group}, actions: ${actions.size()}"
-        }
     }
 }
