@@ -1,0 +1,84 @@
+println "gradle path: ${gradle.gradleHomeDir.path}"
+
+// 1 Вариант задания таски
+//def helloTaskName = "hello"
+//task(helloTaskName)
+//def helloTask = tasks.findByName(helloTaskName)
+//helloTask.description = "Hello task"
+//helloTask.group("atom")
+
+// 2 Вариант через Closure
+// под капотом вызывается метод hello.configure Closure
+//hello {
+//    description = "Hello task"
+//    group = "atom"
+//}
+
+// 3 Вариант, который является более предпочтительным
+//task hello ("description": "Hello task", "group": "atom") {
+//    println "Hello task!"
+//
+//    doLast {
+//        println "Execution phase, Action1"
+//    }
+//
+//    doFirst {
+//        println "Execution phase, Action2"
+//    }
+//
+//    println "description: ${description}, group: ${group}, actions: ${actions.size()}"
+//}
+
+// 4 Вариант через груви скрипт плагин
+
+task first {
+    println "task 1"
+}
+
+task two {
+    dependsOn(first)
+    println "task 2"
+}
+
+task three {
+    dependsOn(two)
+    println "task 3"
+}
+
+task four {
+    dependsOn(first)
+    println "task 4"
+}
+
+four.mustRunAfter(first)
+
+gradle.taskGraph.beforeTask { Task task ->
+    if (task.name == "first") {
+        println task.group
+    }
+}
+
+gradle.taskGraph.afterTask { Task task ->
+    if (task.name == "three") {
+        println task.group
+    }
+}
+
+gradle.taskGraph.whenReady { TaskExecutionGraph graph ->
+    println "---task-graph---"
+    graph.allTasks.each {
+        println it.name
+    }
+}
+
+defaultTasks "two" //если никакая таска при gradle не былв вызвана, то будет вызываться эта таска по умолчанию
+
+// ------ PROPERTY -------
+// Проперти можно напрямую задать через ext в билд файле
+ext {
+    javaVersion = 17
+}
+
+println ext.javaVersion
+println System.getProperty("sys.example")
+println System.getProperty("sys.example1")
