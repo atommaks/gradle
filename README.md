@@ -119,9 +119,16 @@ task copyAllDependencies(type: Copy) {
 jar {
     dependsOn(copyAllDependencies)
     def jars = configurations.runtimeClasspath.files.collect{"lib/$it.name"}
-    manifest {
+    manifest {  
         attributes 'Main-Class': 'ru.atom.gradle.HelloWorld',
                     'Class-Path': jars.join(' ')
     }
 }
 </pre>
+
+## Multiproject builds
+<p>Применяя <code>plugin {'java-library'}</code> и указывая в <code>dependencies {api project (project_name)}</code>,
+проекты, которые включают в себя эту библиотеку, будут и включать эту зависимость. <a href="database/build.gradle">
+Пример</a>.</p>
+<p>С помощью директивы <code>allprojects{}</code> можно настроть общую конфигурацию для всех проектов. А с помощью
+<code>subprojects{} для подпроектов.</code></p>

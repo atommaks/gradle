@@ -2,6 +2,12 @@ plugins {
     id 'java'
 }
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
 apply from: 'script.gradle'
 apply plugin: CustomPlugin.class
 

@@ -1,0 +1,22 @@
+plugins {
+    id 'war'
+    id 'java'
+}
+
+dependencies {
+    implementation project(":service")
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+task deployTomcat(type: Copy) {
+    dependsOn(war)
+    from(war.archiveFile.get())
+    into("/usr/local/Cellar/tomcat/10.1.0/libexec/webapps")
+}
+assemble.dependsOn(deployTomcat)
+
+test {
+    useJUnitPlatform()
+}

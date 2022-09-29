@@ -26,3 +26,10 @@ hs_err_pid*
 gradle/
 .DS_Store
 build/
+
+database/build/
+service/build/
+web/build/
+common/build/
+common/core/build/
+common/util/build/
