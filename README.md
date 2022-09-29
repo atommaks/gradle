@@ -142,5 +142,3 @@ jar {
 ### Cache
 <p>Каждая таска на вход принимает входные данные <code>inputs</code> и отдает выходные данные <code>outputs</code>. На 
 это и строится cache.</p>
-
-### Gradle Wrapper
